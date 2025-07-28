@@ -2,36 +2,26 @@ const express = require("express")
 
 const app = express();
 
-app.use("/route", [rh1,rh2],rh3,rh4)
+const { adminAuth,userAuth }= require("./middlewares/auth")
 
-app.use("/user",
-    (req,res,next)=>{
-        // route handler
-        console.log("handling the route 1")
-        next()
-    },
-    (req,res,next)=>{
-         // route handler
-        console.log("handling the route 2")
-        // res.send("2nd response")
-        next()
-    },
-    (req,res,next)=>{
-         // route handler
-        console.log("handling the route 3")
-        // res.send("3rd response")
-        next()
-    },
-    (req,res,next)=>{
-         // route handler
-        console.log("handling the route 4")
-        // res.send("4th response")
-        next()
-    }
-)
+// handle auth middleware for all request. then use() method
+app.use("/admin",adminAuth);
 
-app.use((req,res)=>{
-    res.send("response 5")
+app.get("/admin/getAllData", (req,res)=>{
+    res.send("all data sent")
+})
+
+app.get("/admin/deleteUser", (req,res)=>{
+     //Logic of checking if the request is authorize
+    res.send("user is deleted")
+})
+
+app.post("/user/login",(req,res)=>{
+    res.send("User logged in successfully.")
+})
+
+app.get("/user",userAuth,(req,res)=>{
+    res.send("User data sent.")
 })
 
 app.listen(7777,()=>{

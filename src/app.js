@@ -2,15 +2,24 @@ const express = require("express")
 
 const app = express();
 
-app.use("/hello",(req,res)=>{
-    res.send("Hello from server");
+app.get("/user",(req,res)=>{
+    res.send({
+        username:"Shilpesh",
+        lastname:"Thakur"
+    })
+})
+
+app.post("/user",(req,res)=>{
+    console.log("User saved to database")
+    res.send("data successfully saved to database")
+})
+
+app.delete("/user",(req,res)=>{
+    console.log("User deleted to database")
+    res.send("data successfully deleted from database")
 })
 
 app.use("/test",(req,res)=>{
-    res.send("Hello from the server");
-})
-
-app.use("/",(req,res)=>{
     res.send("Namaste dashboard");
 })
 

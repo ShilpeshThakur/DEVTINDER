@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+const jwt = require("jsonwebtoken")
 var validator = require('validator');
+const bcrypt = require("bcrypt")
 
 const userSchema = new mongoose.Schema({
     firstName:{
@@ -63,27 +65,43 @@ const userSchema = new mongoose.Schema({
             type:String,
             minlength: 4,
             maxlength: 20
-        }],
-        validate:[
-            {
-                validator: function(arr){
-                    return arr.length >= 1
-                },
-                message: "At least 1 skill is required",
-            },
-            {
-                validator: function (arr) {
-                    return arr.length <= 5;
-                },
-                message: "No more than 5 skills allowed",
-            }
-        ]
+        }]
+        // ,
+        // validate:[
+        //     {
+        //         validator: function(arr){
+        //             return arr.length >= 1
+        //         },
+        //         message: "At least 1 skill is required",
+        //     },
+        //     {
+        //         validator: function (arr) {
+        //             return arr.length <= 5;
+        //         },
+        //         message: "No more than 5 skills allowed",
+        //     }
+        // ]
     }
 },
     {
         timestamps: true 
 }) 
 
-const userModel = mongoose.model("User", userSchema)
+userSchema.methods.getJwt = async function(){
+    const user = this
+    const token = await jwt.sign({_id:user._id},"SECRETE_KEY_DEV@Tinder$790",{ expiresIn: '1d' })
 
-module.exports = userModel;
+    return token
+}
+
+userSchema.methods.validatePassword = async function(passwordInputByUser){
+    const user = this
+    const passwordHash = user.password
+
+    const isPasswordValid = await bcrypt.compare(
+        passwordInputByUser, 
+        passwordHash)
+
+    return isPasswordValid
+}
+module.exports = mongoose.model("User", userSchema)

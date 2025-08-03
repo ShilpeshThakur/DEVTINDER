@@ -22,26 +22,23 @@ const validateProfileEditData = (req) =>{
 }
 
 const validatePassword = async(req)=>{
-    const requiredFields = ["oldPassword","newPassword"];
-    const dataKeys = Object.keys(req.body)
-    const hasRequiredField = requiredFields.every((field)=>
-        dataKeys.includes(field)
-    );
-
-    if(!hasRequiredField){
-        return false
+    const {oldPassword, newPassword} = req.body;
+    if (!oldPassword || !newPassword) {
+        throw new Error("Old and new passwords are required");
     }
 
-    if(!validator.isStrongPassword(req.body.newPassword)){
-        return false
+    if (!validator.isStrongPassword(newPassword)) {
+        throw new Error("Password is not strong enough");
     }
     
-    const isPasswordValid = await req.user.validatePassword(req.body.oldPassword);
-    if(!isPasswordValid){
-       return false
+     if (oldPassword === newPassword) {
+        throw new Error("New password must be different from old password");
     }
-    
-    return true
+
+    const isValidOld = await req.user.validatePassword(oldPassword);
+    if (!isValidOld) {
+        throw new Error("Old password is incorrect");
+    }
 }
 
 module.exports = {validateSignUpdata, validateProfileEditData,validatePassword}

@@ -40,18 +40,19 @@ profileRouter.patch("/profile/edit", userAuth, async(req,res)=>{
 
 profileRouter.patch("/profile/password",userAuth,async(req,res)=>{
     try{
-        if(! await validatePassword(req)){
-            throw new Error("Data is invalid")
+        if (!req.user) {
+            return res.status(401).json({ error: "Unauthorized" });
         }
-        const user = req.user;
-
+        
+        await validatePassword(req)
+            
         const passwordHash = await bcrypt.hash(req.body.newPassword, 10)
-        user.password = passwordHash;
+        req.user.password = passwordHash;
 
-        await user.save()
+        await req.user.save()
         res.send("Password updated successfully.")
     }catch(err){
-        res.status(400).send("Error : "+err.message)
+        res.status(400).send({"Error : ":err.message})
     }
 })
 

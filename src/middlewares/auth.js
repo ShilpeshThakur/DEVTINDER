@@ -6,7 +6,7 @@ const userAuth = async(req,res,next)=>{
         //read the token form request cookie
         const {token} = req.cookies
         if(!token){
-            throw new Error("token is not valid")
+            return res.status(401).send("Please Login!")
         }
         //validate token
         const decodedData = await jwt.verify(token,"SECRETE_KEY_DEV@Tinder$790")

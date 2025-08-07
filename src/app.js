@@ -3,6 +3,8 @@ const {connectDb} = require("./config/database");
 const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+require('dotenv').config()
+
 
 const corsOptions = {
     origin : "http://localhost:5173",

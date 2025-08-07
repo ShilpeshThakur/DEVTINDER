@@ -33,7 +33,7 @@ connectDb().then(()=>{
         console.log("Server is listening on port 7777...");
     });
 }).catch((err)=>{
-    console.error("Database cannot be connected");
+    console.error("Database cannot be connected",err);
 });
 
 

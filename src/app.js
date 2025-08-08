@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require('dotenv').config()
 
+// require("./utils/cronjob"); // added cron job for sending email
 
 const corsOptions = {
     origin : "http://localhost:5173",
